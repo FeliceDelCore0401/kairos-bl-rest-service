@@ -1,0 +1,22 @@
+name: CI
+
+# Triggers
+on:
+  release:
+      types: [published]
+  workflow_dispatch: # Manual trigger from the Actions tab
+
+jobs:
+  ci:
+    secrets: inherit
+    uses: Sisal-Org/shared-workflows/.github/workflows/itgovcross-workflow.yaml@1.4.0
+    with:
+      project-type: "docker-mvn"
+    #  OPTIONAL
+      dockerfile: "dockerfile/Dockerfile"
+    #  project_dir: "<<put path of project here>>"
+    #  docker_context: "<<put Docker context path here>>" 
+    #  profiles: '[" "]'     
+    #  deploy-projects: '[" "," "]'
+    #  docker-build-args: " "
+    #  node-version:''

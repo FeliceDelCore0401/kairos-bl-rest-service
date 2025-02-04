@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: bl-rest-service-test 
+
+POD_ID: rest-service_local  # Valore di default per evitare errori di placeholder
+
+kafka:
+  bootstrap-servers: localhost:9092
+  consumer:
+    group-id: test-group
+    auto-offset-reset: earliest
+    topics: test-topic  # 🔹 Aggiunto per evitare l'errore
+    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    properties:
+      spring.json.trusted.packages: "*"
+  producer:
+    retries: 3
+    key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+grpc:
+  server:
+    port: 9099
+
+grpc-destinations:
+  monitor:
+    enabled: true
+    address: "localhost:9100"
+  sender-vault:
+    enabled: false
+    address: "localhost:9101"
+  sender-rest:
+    enabled: true
+    address: "localhost:9102"
+
+frost:
+  thread: single
+  machineid:
+    provider: random
+  random:
+    generator: CSPRNG
+
+dapr:
+  state-store: "redis-test"

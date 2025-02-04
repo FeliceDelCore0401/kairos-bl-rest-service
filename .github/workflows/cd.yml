@@ -1,0 +1,77 @@
+name: CD
+
+on:
+  workflow_dispatch:
+   inputs:
+        imageName:
+          description: 'Image name (null in case of reuse the same as it is and change only the tag)'
+          type: string
+          required: false
+        imageTag:
+          description: 'Tag image to patch in manifest'
+          type: string
+          required: true
+        env:
+          type: choice
+          description: Select environment
+          options:
+          - dev
+          - test
+          - preprod
+          - prod
+          required: true
+        country:
+          type: choice
+          description: Select country          
+          default: ita 
+          options:
+          - ita
+          - tur
+          - mar
+          - esp
+          - tun
+          - gbr
+          - irl
+          - zaf
+          required: true
+        license:
+          type: choice
+          description: Select license          
+          default: sisal
+          options:
+          - sisal
+          - adm
+          - gntn
+          - mdjs
+          - sgln
+          - sans
+          - pokerstars
+          required: true              
+        farm:
+          type: choice
+          description: Select farm          
+          default: farm-a
+          options:
+          - farm-a
+          - farm-b
+          - farm-c
+          - farm-d
+          required: true   
+        ticket:
+          type: string
+          description: 'Ticket Number. Required for env "test", "preprod" and "prod"; empty for "dev"'          
+          required: false        
+
+jobs:
+  call-deployment-workflow:
+    uses: "Sisal-Org/shared-workflows/.github/workflows/cd-workflow.yaml@1.1.0"
+    with:
+      repoName: 'kairos-manifests'
+      imageName: ${{ inputs.imageName }}
+      imageTag: ${{ inputs.imageTag }}
+      env: ${{ inputs.env }}      
+      license: ${{ inputs.license }}
+      farm: ${{ inputs.farm }}
+      ticket: ${{inputs.ticket}}
+      country: ${{inputs.country}}
+    secrets: inherit

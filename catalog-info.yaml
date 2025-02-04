@@ -1,0 +1,35 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: kairos-bl-rest-service
+  description: KAIROS - BusinessLogic REST Service
+  annotations:
+    github.com/project-slug: Sisal-Org/kairos-bl-rest-service #Sisal-Org/<project-slug>
+    argocd/applications: "kairos-app-ita-pokerstars-dev-a" #list Of argocd application
+    argocd/componentName: bl-rest-service # entity deploy name
+    argocd/resources-all: bl-rest-service # name of argocd resource to display
+    code-quality/project-key: kairos-bl-rest-service:bl-rest-service # <REPO-NAME>:<ARTFACT-NAME>
+    security/application-name: kairos-bl-rest-service:bl-rest-service # <REPO-NAME>:<ARTFACT-NAME>
+    sonarqube.org/project-key: kairos-bl-rest-service:bl-rest-service # <REPO-NAME>:<ARTFACT-NAME>
+    # backstage.io/techdocs-ref: dir:. uncomment if techdocs are present in the repo
+    dependency-track/project-name: kairos-bl-rest-service:bl-rest-service # <REPO-NAME>:<ARTFACT-NAME>
+    sisal/cmdb-id: "01123" # cmdb id
+    oci-registry/repository-name: kairos-bl-rest-service/bl-rest-service # repository name on oci
+    splunk.com/on-call-team: "[ITA] - Cross Accounting Regulatory - Repnorm|Observer|ADM Portal" # name of the splunk on call team responsible of this project
+    # nexus-repository-manager/name: name of the artifact ONLY USE IF TYPE = LIBRARY
+    # nexus-repository-manager/repository: name of the repository of the artifact ONLY USE IF TYPE = LIBRARY
+spec:
+  type: service # service | website | library
+  owner: IDP-ITGovCrossPlatforms-Kairos # The IDP group that you are a part of without the -LEAD or -DEV part and with group: before it, es. group:IDP-ITStrategy-DSO
+  lifecycle: development
+  system: KAIROS # the system of this entity, it can be found on the IDP in the catalog
+  # The list of entities of Kind Api that this component exposes  
+  #providesApis: 
+  #  - example-api
+  # The list of entities of Kind Api that this component consumes  
+  #consumesApis: 
+  #  - example-api
+# The list of entities of Kind Api that this component consumes  
+#dependsOn: 
+#  - resource:example-resource
+#  - component:example-component

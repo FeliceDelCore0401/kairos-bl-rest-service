@@ -1,0 +1,84 @@
+{
+    "buildConfiguration": {
+        "buildTasks": {
+            "maven clean package": {
+                "type": "maven",
+                "selected": true,
+                "configuration": {
+                    "phase": "package",
+                    "pomPath": "pom.xml",
+                    "saveToBuildDir": true,
+                    "enableSonarScan": true,
+                    "clean": true,
+                    "managedSettingsId": "maven-settings-oci",
+                    "properties": [
+                        "skipTests=true"
+                    ],
+                    "withDocker": {
+                        "image": "fra.ocir.io/sisalspa/base-images/maven:3.8.3-openjdk-23"
+                    }
+                }
+            }
+        }
+    },
+    "containerConfiguration": {
+        "branchConfiguration": {
+            "develop": {
+                "tagPrefix": "svil",
+                "regexFilter": "develop|feature.+"
+            }
+        },
+        "containerTasks": {
+            "build docker image": {
+                "type": "docker-image",
+                "selected": true,
+                "activeBranches": [
+                    "develop"
+                ],
+                "configuration": {
+                    "buildContext": "BUILD/maven-clean-package",
+                    "dockerfile": "BUILD/maven-clean-package/dockerfile/Dockerfile",
+                    "imageName": "kairos/bl-rest-service",
+                    "buildArgs": [
+                        "TARGET_PATH=BUILD/maven-clean-package/bl-rest-service/target"
+                    ],
+                    "generatedFinalImageName": "fra.ocir.io/sisalspa/kairos/bl-rest-service",
+                    "tags": {
+                        "develop": {
+                            "tag": "f5fb78f3ef8f-46-svil"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "kubernetesConfiguration": {
+        "manifestsGitSCM": {
+            "url": "http://git-ita.nplts.sisal.it/kairos/bl-rest-service-manifests.git",
+            "branch": "main"
+        },
+        "clusterDefinitions": {
+            "svil-cluster": {
+                "deploymentPath": "kubernetes/svil",
+                "namespaces": [
+                    "kairos-common"
+                ],
+                "branchRegexFilter": "develop|feature.+",
+                "deployAgentName": "jenkins-repnorm-ita-sisal-dev-a"
+            }
+        },
+        "kubernetesTasks": {
+            "deploy": {
+                "type": "k8s_deploy",
+                "activeClusters": [
+                    "svil-cluster"
+                ],
+                "configuration": {
+                    "imageFrom": [
+                        "build docker image"
+                    ]
+                }
+            }
+        }
+    }
+}

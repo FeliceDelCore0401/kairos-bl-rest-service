@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: bl-rest-service
+
+POD_ID: rest-service_local # solo per l'ambiente locale
+
+grpc:
+  server:
+    port: 9099
+
+# Configurazione per le destinazioni grpc:
+grpc-destinations:
+  monitor:
+    enabled: true
+    address: "localhost:9100"
+  sender-vault:
+    enabled: false
+    address: "localhost:9101"
+  sender-rest:
+    enabled: true
+    address: "localhost:9102"
+
+frost:
+  thread: single
+  machineid:
+    provider: random
+  random:
+    generator: CSPRNG
+
+dapr:
+  state-store: "redis-test"
+
+kafka:
+  bootstrap-servers: kafka-kafka-0.kafka-kafka-brokers.kairos-common.svc:9092,
+                    kafka-kafka-1.kafka-kafka-brokers.kairos-common.svc:9092,
+                    kafka-kafka-2.kafka-kafka-brokers.kairos-common.svc:9092
+  producer:
+    acks: 1
+    retries: 3
+    batch-size: 16384
+    linger-ms: 10
+    key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  consumer:
+    group-id: my-consumer-group
+    topics: test-topic
+    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    properties:
+      spring.json.trusted.packages: "it.sisal.kairos.blrest.model"
+      spring.json.type.mapping: "GenericMsg:it.sisal.kairos.blrest.model.GenericMsg"
+      spring.json.value.default.type: "it.sisal.kairos.blrest.model.GenericMsg"
